@@ -18,24 +18,15 @@ Position createEl(int);
 Position addEl(int, Position);
 void menu(Position);
 Position findMinRight(Position);
-Position deleteAll(Position);
+int deleteAll(Position);
 Position find(int,Position);
 Position deleteEl(int, Position);
 void printAll(Position);
 
 int main()
 {
-	int number;
-	bTree Root;
-	printf("Choose number for root of binary tree: ");
-	scanf("%d", &number);
-	Root.el = number;
-	
-	Root.Lchild = NULL;
-	Root.Rchild = NULL;
-
-	
-	menu(&Root);
+	Position Root=NULL;
+	menu(Root);
 
 	return EXIT_SUCCESS;
 }
@@ -74,7 +65,7 @@ void menu(Position root)
 
 		switch (option) {
 		case 0:
-			root=deleteAll(current);
+			deleteAll(current);
 			return EXIT_SUCCESS;
 			break;
 		case 1:
@@ -82,7 +73,7 @@ void menu(Position root)
 			scanf("%d",&number);
 			
 			if (find(number, root) == NULL)
-				current = addEl(number, root);
+				root = addEl(number, root);
 			else
 				printf("Number already exists in tree you can't add it twice!\n");
 			break;
@@ -114,6 +105,8 @@ void menu(Position root)
 		case 4:
 			printf("Current Tree in order: \n");
 			printAll(root);
+			if (root == NULL)
+				printf("Binary tree is empty!");
 			break;
 		default:
 			puts("Choose only numbers from 0-4!\n");
@@ -176,16 +169,16 @@ Position deleteEl(int el,Position current) {
 	return current;
 }
 
-Position deleteAll(Position current) {
+int deleteAll(Position current) {
 	if (NULL == current)
-		return current;
+		return EXIT_SUCCESS;
 
 
 	deleteAll(current->Lchild);
 	deleteAll(current->Rchild);
-	current = NULL;
+	free(current);
 
-	
+	return EXIT_SUCCESS;
 }
 
 Position findMinRight(Position current) {
@@ -199,9 +192,6 @@ Position findMinRight(Position current) {
 }
 
 void printAll(Position current) {
-
-	if (current == NULL)
-		printf("Binary tree is empty!");
 
 	if (current != NULL) {
 		printAll(current->Lchild);
